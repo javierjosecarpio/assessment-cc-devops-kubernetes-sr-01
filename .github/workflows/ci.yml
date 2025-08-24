@@ -40,14 +40,31 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Build Docker image
-      run: docker build -t rdicidr-app:latest .
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - uses: actions/checkout@v3
 
-    - name: Save Docker image
-      run: docker save -o rdicidr-image.tar rdicidr-app:latest
-
-    - name: Upload Docker image artifact
-      uses: actions/upload-artifact@v4
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
       with:
-        name: rdicidr-docker-image
-        path: codebase/rdicidr-0.1.0/rdicidr-image.tar
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./codebase/rdicidr-0.1.0
+        platforms: linux/arm64
+        push: true
+        tags: ghcr.io/${{ github.repository_owner }}/rdicidr-app:latest

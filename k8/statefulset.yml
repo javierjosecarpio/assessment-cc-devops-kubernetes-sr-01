@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rdicidr
-        image: rdicidr-app:latest
+        image: ghcr.io/javierjosecarpio/rdicidr-app:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
