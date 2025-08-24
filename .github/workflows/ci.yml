@@ -47,7 +47,7 @@ jobs:
       run: docker save -o rdicidr-image.tar rdicidr-app:latest
 
     - name: Upload Docker image artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: rdicidr-docker-image
         path: codebase/rdicidr-0.1.0/rdicidr-image.tar
