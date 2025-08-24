@@ -39,3 +39,15 @@ jobs:
 
     - name: Build
       run: npm run build
+
+    - name: Build Docker image
+      run: docker build -t rdicidr-app:latest .
+
+    - name: Save Docker image
+      run: docker save -o rdicidr-image.tar rdicidr-app:latest
+
+    - name: Upload Docker image artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: rdicidr-docker-image
+        path: codebase/rdicidr-0.1.0/rdicidr-image.tar
