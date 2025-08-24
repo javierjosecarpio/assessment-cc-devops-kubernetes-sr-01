@@ -1,21 +1,32 @@
-FROM node:15 as builder
+# Etapa 1: Construir la aplicación React
+FROM node:15-alpine as build
 
-WORKDIR
+# Instalar Python y herramientas de construcción
+RUN apk add --no-cache python3 make g++
 
-COPY
+WORKDIR /app
 
-RUN 
+# Copiar package.json y package-lock.json
+COPY package.json ./
+COPY package-lock.json ./
 
-COPY
+# Instalar dependencias
+RUN npm install
 
-RUN 
+# Copiar el resto del código fuente de la aplicación
+COPY . .
 
-FROM
+# Construir la aplicación
+RUN npm run build
 
-WORKDIR
+# Etapa 2: Servir la aplicación usando Nginx
+FROM nginx:stable-alpine
 
-COPY
+# Copiar los archivos estáticos construidos desde la etapa de construcción
+COPY --from=build /app/build /usr/share/nginx/html
 
-RUN 
+# Exponer el puerto 80
+EXPOSE 80
 
-ENTRYPOINT 
+# Iniciar Nginx
+CMD ["nginx", "-g", "daemon off;"]

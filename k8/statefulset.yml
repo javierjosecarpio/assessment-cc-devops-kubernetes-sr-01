@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rdicidr
+  namespace: production
+spec:
+  serviceName: "rdicidr-service"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rdicidr
+  template:
+    metadata:
+      labels:
+        app: rdicidr
+    spec:
+      containers:
+      - name: rdicidr
+        image: ghcr.io/javierjosecarpio/rdicidr-app:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+        env:
+        - name: MY_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: rdicidr-secret
+              key: MY_SECRET
