@@ -14,9 +14,11 @@ spec:
       labels:
         app: rdicidr
     spec:
+      nodeSelector:
+        kubernetes.io/arch: arm64
       containers:
       - name: rdicidr
-        image: ghcr.io/javierjosecarpio/rdicidr-app:latest
+        image: carpio701021/rdicidr-app:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
