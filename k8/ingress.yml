@@ -4,8 +4,10 @@ metadata:
   name: rdicidr-ingress
   namespace: production
   annotations:
+    #cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
   - host: "fsl-challenge.me"
     http:
@@ -17,3 +19,19 @@ spec:
             name: rdicidr-service
             port:
               number: 8080
+
+  - host: "fsl-challenge.proyeccionesguatemala.com"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rdicidr-service
+            port:
+              number: 8080
+
+  tls:
+  - hosts:
+    - fsl-challenge.proyeccionesguatemala.com
+    secretName: fsl-challenge-tls
